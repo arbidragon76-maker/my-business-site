@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taco Bell $100 Gift Card Giveaway</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #702082;
+      --primary-light: #9b2fb8;
+      --secondary: #ffc72c;
+      --bg: #0f0c1b;
+      --card-bg: #1a162b;
+      --text: #ffffff;
+      --text-muted: #a0a0b0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--secondary);
+      text-shadow: 0 0 10px rgba(255, 199, 44, 0.4);
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 450px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 25px 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      line-height: 1.3;
+    }
+
+    .wheel-container {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      margin: 20px auto;
+    }
+
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 8px solid var(--secondary);
+      box-shadow: 0 0 20px rgba(112, 32, 130, 0.8);
+      transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+      background: conic-gradient(
+        #702082 0deg 60deg,
+        #e11b22 60deg 120deg,
+        #702082 120deg 180deg,
+        #ffc72c 180deg 240deg,
+        #702082 240deg 300deg,
+        #e11b22 300deg 360deg
+      );
+    }
+
+    .pointer {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 25px solid var(--secondary);
+      z-index: 10;
+    }
+
+    .spin-btn {
+      background: linear-gradient(135deg, #ffc72c, #ff9900);
+      color: #000;
+      border: none;
+      padding: 15px 40px;
+      font-size: 18px;
+      font-weight: 800;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255, 199, 44, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .spin-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 199, 44, 0.6);
+    }
+
+    /* Modal / Claim Section */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      padding: 30px 20px;
+      border-radius: 20px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      border: 2px solid var(--secondary);
+      animation: popIn 0.3s ease;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .claim-btn {
+      display: block;
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      text-decoration: none;
+      padding: 18px 20px;
+      font-size: 18px;
+      font-weight: 800;
+      border-radius: 50px;
+      margin-top: 20px;
+      box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+      text-transform: uppercase;
+    }
+
+    .timer {
+      font-size: 12px;
+      color: #ff4757;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">🌮 TACO BELL REWARDS</div>
+    <div class="subtitle">Official US Exclusive Giveaway</div>
+  </header>
+
+  <div class="container">
+    <h1>Spin To Win A $100 Taco Bell Gift Card!</h1>
+    
+    <div class="wheel-container">
+      <div class="pointer"></div>
+      <div class="wheel" id="wheel"></div>
+    </div>
+
+    <button class="spin-btn" id="spinBtn" onclick="spinWheel()">SPIN THE WHEEL</button>
+  </div>
+
+  <!-- WIN POPUP MODAL -->
+  <div class="modal" id="winModal">
+    <div class="modal-content">
+      <h2 style="color: var(--secondary); font-size: 26px;">🎉 CONGRATULATIONS!</h2>
+      <p style="margin-top: 10px; font-size: 16px;">You won a <strong>$100 Taco Bell Gift Card</strong>!</p>
+      <p style="font-size: 13px; color: var(--text-muted); margin-top: 10px;">Click below and enter your email/zip to claim your card instantly.</p>
+
+      <!-- AFFILIATE DIRECT OFFER LINK EMBEDDED HERE -->
+      <a id="cpa-offer-link" href="https://app.trcefy.com/click?pid=2&offer_id=23755&sub2=u827776&sub5=s1SUBID1HERE" class="claim-btn" target="_blank" rel="noopener">
+        CLAIM MY $100 GIFT CARD NOW
+      </a>
+
+      <div class="timer">Reserved for: <span id="time">03:00</span> min</div>
+    </div>
+  </div>
+
+  <script>
+    let spun = false;
+
+    function spinWheel() {
+      if (spun) return;
+      spun = true;
+
+      const wheel = document.getElementById('wheel');
+      const btn = document.getElementById('spinBtn');
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+
+      // Random rotation that lands on a winning sector
+      const randomRotation = 360 * 5 + 210; 
+      wheel.style.transform = `rotate(${randomRotation}deg)`;
+
+      setTimeout(() => {
+        document.getElementById('winModal').style.display = 'flex';
+        startTimer(180);
+      }, 4000);
+    }
+
+    function startTimer(duration) {
+      let timer = duration, minutes, seconds;
+      setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        document.getElementById('time').textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+          timer = duration;
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
